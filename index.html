@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoService - Mantenimiento a Domicilio Rápido y Fiable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-gradient { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+        .cta-button { transition: all 0.3s ease; }
+        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Chat Widget Styles */
+        #chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+        #chat-button { background: #1e3a8a; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.2s ease; }
+        #chat-button:hover { transform: scale(1.1); }
+        #chat-window { position: absolute; bottom: 80px; right: 0; width: 320px; height: 450px; background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none; flex-direction: column; overflow: hidden; transition: all 0.3s ease; transform-origin: bottom right; }
+        #chat-window.open { display: flex; animation: openChat 0.3s ease-out; }
+        @keyframes openChat { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        #chat-header { background: #1e3a8a; color: white; padding: 12px; font-weight: 600; text-align: center; }
+        #chat-body { flex-grow: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .chat-message { max-width: 80%; padding: 8px 12px; border-radius: 18px; line-height: 1.4; }
+        .chat-message.user { background: #3b82f6; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .chat-message.bot { background: #e5e7eb; color: #1f2937; align-self: flex-start; border-bottom-left-radius: 4px; }
+        #chat-input { border-top: 1px solid #e5e7eb; padding: 12px; }
+        #chat-input input { width: 100%; border: 1px solid #d1d5db; padding: 8px 12px; border-radius: 20px; outline: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- HERO SECTION -->
+    <section class="hero-gradient text-white">
+        <div class="container mx-auto px-6 py-20 md:py-32 text-center">
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight leading-tight mb-4 fade-in">Tu Coche, Siempre a Punto. <br><span class="text-blue-300">Sin Moverte de Casa.</span></h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8 fade-in" style="animation-delay: 0.2s;">Servicio de mantenimiento y neumáticos a domicilio. Rápido, transparente y con la máxima garantía. Agenda en 60 segundos.</p>
+            <a href="#booking-form" class="cta-button bg-white text-blue-700 font-bold py-3 px-8 rounded-full text-lg inline-block fade-in" style="animation-delay: 0.4s;">Reservar Ahora</a>
+            
+            <!-- KPIs -->
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto fade-in" style="animation-delay: 0.6s;">
+                <div class="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
+                    <h3 class="text-2xl font-bold mb-2">Reserva en 60s</h3>
+                    <p class="opacity-80">Por WhatsApp o email. Fácil y directo.</p>
+                </div>
+                <div class="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
+                    <h3 class="text-2xl font-bold mb-2">+150 Puntos Revisados</h3>
+                    <p class="opacity-80">Revisión completa Pre-ITV y mantenimiento.</p>
+                </div>
+                <div class="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
+                    <h3 class="text-2xl font-bold mb-2">Garantía Total</h3>
+                    <p class="opacity-80">Coche de sustitución si no cumplimos el plazo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOOKING FORM -->
+    <section id="booking-form" class="py-20 bg-white">
+        <div class="container mx-auto px-6 max-w-3xl">
+            <h2 class="text-3xl font-bold text-center mb-2">Agenda tu Servicio</h2>
+            <p class="text-center text-gray-600 mb-10">Completa el formulario y te contactaremos a la brevedad.</p>
+            
+            <form id="main-form" class="space-y-6">
+                <!-- Contacto -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="name" class="font-semibold block mb-2">Nombre completo *</label>
+                        <input type="text" id="name" name="name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="email" class="font-semibold block mb-2">Email *</label>
+                        <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                </div>
+                <div>
+                    <label for="phone" class="font-semibold block mb-2">Móvil (para WhatsApp) *</label>
+                    <input type="tel" id="phone" name="phone" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                
+                <!-- Servicio -->
+                 <div>
+                    <label for="service-type" class="font-semibold block mb-2">Tipo de Servicio *</label>
+                    <select id="service-type" name="service-type" class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                        <option value="Mantenimiento">Mantenimiento (Recogida y entrega) - 250€ + recambios</option>
+                        <option value="Neumaticos">Cambio de Neumáticos (Servicio móvil)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="address" class="font-semibold block mb-2">Dirección de Recogida / Servicio *</label>
+                    <textarea id="address" name="address" rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Calle, número, código postal, ciudad..." required></textarea>
+                </div>
+                <p class="text-sm text-gray-500">Para el servicio de mantenimiento, se requiere una franja mínima de 6h entre recogida y entrega.</p>
+                
+                <!-- Botones -->
+                <div class="grid md:grid-cols-2 gap-4 pt-4">
+                    <button type="button" onclick="sendWhatsApp(event)" class="w-full text-center bg-green-500 text-white font-bold py-4 px-6 rounded-lg cta-button flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.267.655 4.398 1.908 6.166l-.36 1.225 1.245-.355z"/></svg>
+                        Reservar por WhatsApp
+                    </button>
+                    <button type="submit" class="w-full text-center bg-blue-600 text-white font-bold py-4 px-6 rounded-lg cta-button flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                        Confirmar por Email
+                    </button>
+                </div>
+                 <div class="text-center pt-4">
+                    <button type="button" onclick="handleStripeCheckout()" class="text-white bg-indigo-600 font-bold py-3 px-8 rounded-full cta-button">
+                        Pagar Señal de Reserva (25€)
+                    </button>
+                    <p class="text-xs text-gray-500 mt-2">Paga una pequeña señal para confirmar tu cita. 100% reembolsable.</p>
+                </div>
+            </form>
+            <div id="form-confirmation" class="hidden mt-6 text-center bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
+                ¡Gracias! Hemos recibido tu solicitud. Te contactaremos pronto.
+            </div>
+        </div>
+    </section>
+
+    <!-- TIRE RECOMMENDER -->
+    <section id="tire-recommender" class="py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-2">¿No sabes qué neumáticos elegir?</h2>
+            <p class="text-gray-600 mb-10">Te ayudamos con nuestra recomendación (Demo).</p>
+            <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <button onclick="showTireRecommendation('alta-gama')" class="p-8 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">
+                    <div class="text-4xl mb-2">🏆</div>
+                    <h3 class="text-xl font-bold">Alta Gama</h3>
+                    <p class="text-gray-500">Máximo rendimiento y seguridad.</p>
+                </button>
+                <button onclick="showTireRecommendation('calidad-precio')" class="p-8 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">
+                     <div class="text-4xl mb-2">⚖️</div>
+                    <h3 class="text-xl font-bold">Calidad-Precio</h3>
+                    <p class="text-gray-500">El equilibrio perfecto.</p>
+                </button>
+                <button onclick="showTireRecommendation('economico')" class="p-8 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">
+                     <div class="text-4xl mb-2">💡</div>
+                    <h3 class="text-xl font-bold">Económico</h3>
+                    <p class="text-gray-500">Para presupuestos ajustados.</p>
+                </button>
+            </div>
+            <div id="tire-result" class="mt-8 p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto min-h-[100px] flex items-center justify-center hidden">
+                <p id="tire-result-text" class="text-lg"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- GUARANTEE -->
+    <section class="bg-gray-800 text-white py-20">
+        <div class="container mx-auto px-6 text-center max-w-3xl">
+             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+            <h2 class="text-3xl font-bold mb-4">Nuestro Compromiso: Tu Tranquilidad</h2>
+            <p class="text-lg opacity-80">Entendemos que tu tiempo es oro. Si por cualquier complicación (disponibilidad de material, estado del vehículo) no podemos entregar tu coche en la franja horaria acordada, te proporcionamos un <strong>coche de sustitución de forma inmediata</strong> y sin coste alguno para ti. Tu movilidad está garantizada.</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="container mx-auto px-6 text-center text-sm opacity-70">
+            <p>&copy; 2024 AutoService. Todos los derechos reservados.</p>
+            <p>Servicio de Mantenimiento y Neumáticos a Domicilio.</p>
+        </div>
+    </footer>
+    
+    <!-- STICKY CTA (Mobile) -->
+    <a href="#booking-form" class="md:hidden fixed bottom-0 left-0 right-0 bg-blue-600 text-white text-center font-bold py-4 z-50">
+        Reservar Mantenimiento
+    </a>
+
+    <!-- CHAT WIDGET -->
+    <div id="chat-widget">
+        <div id="chat-window">
+            <div id="chat-header">Asistente Virtual (Demo)</div>
+            <div id="chat-body">
+                <div class="chat-message bot">¡Hola! ¿Cómo puedo ayudarte hoy?</div>
+            </div>
+            <div id="chat-input">
+                <input type="text" id="chat-message-input" placeholder="Escribe tu pregunta..." onkeydown="if(event.key === 'Enter') handleSendMessage()">
+            </div>
+        </div>
+        <div id="chat-button" onclick="toggleChat()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+        </div>
+    </div>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- PRODUCTION CUSTOMIZATION ---
+        // 1. Cambia este número por tu móvil con el prefijo del país (ej. 34 para España)
+        const WHATSAPP_NUMBER = '34600000000';
+        
+        // 2. Cambia este email por el tuyo para recibir las solicitudes del formulario.
+        const CONTACT_EMAIL = 'danielpguti@gmail.com';
+
+
+        const form = document.getElementById('main-form');
+        const confirmationMessage = document.getElementById('form-confirmation');
+
+        window.sendWhatsApp = function(event) {
+            event.preventDefault();
+            if (!form.checkValidity()) {
+                alert('Por favor, completa todos los campos requeridos antes de enviar por WhatsApp.');
+                form.reportValidity();
+                return;
+            }
+            
+            const name = document.getElementById('name').value;
+            const service = document.getElementById('service-type').value;
+            
+            const message = encodeURIComponent(`¡Hola! Soy ${name} y quiero reservar el servicio de "${service}".`);
+            
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+        }
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const service = formData.get('service-type');
+            const address = formData.get('address');
+            
+            const subject = `Nueva reserva de ${service} de ${name}`;
+            const body = `Has recibido una nueva solicitud de reserva:\n\nNombre: ${name}\nEmail: ${email}\nServicio: ${service}\nDirección: ${address}`;
+
+            // Abre el cliente de correo por defecto
+            window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            form.style.display = 'none';
+            confirmationMessage.style.display = 'block';
+        });
+
+        window.showTireRecommendation = function(type) {
+            const resultDiv = document.getElementById('tire-result');
+            const resultText = document.getElementById('tire-result-text');
+            let recommendation = '';
+
+            if (type === 'alta-gama') {
+                recommendation = 'Excelente opción para quienes buscan el máximo rendimiento, agarre y seguridad. Ideal para conducción deportiva y vehículos de alta potencia. Marcas como Michelin Pilot Sport, Goodyear Eagle F1.';
+            } else if (type === 'calidad-precio') {
+                recommendation = 'La elección inteligente. Ofrecen un gran equilibrio entre durabilidad, seguridad y precio. Perfectos para el día a día y viajes largos. Marcas como Hankook Ventus Prime, Firestone Roadhawk.';
+            } else {
+                recommendation = 'Solución funcional y económica para conductores que priorizan el presupuesto y hacen un uso moderado del vehículo en ciudad. Cumplen con todas las normativas de seguridad.';
+            }
+
+            resultText.textContent = recommendation;
+            resultDiv.style.display = 'flex';
+        }
+        
+        // --- STRIPE CHECKOUT ---
+        // 3. Para habilitar pagos, reemplaza esto con tu integración de Stripe Checkout.
+        // Sigue la guía de Stripe: https://stripe.com/docs/checkout/quickstart
+        window.handleStripeCheckout = function() {
+            alert('Integración con pasarela de pago (Stripe) pendiente. Esto es una demo.');
+            console.log('Aquí iría la llamada a Stripe Checkout para crear una sesión de pago.');
+            // Ejemplo de código de Stripe (necesitarás un backend):
+            // fetch('/create-checkout-session', { method: 'POST' })
+            //   .then(response => response.json())
+            //   .then(session => stripe.redirectToCheckout({ sessionId: session.id }))
+        }
+
+
+        // --- CHAT WIDGET DEMO ---
+        // 4. Si quieres conectar un chat real, reemplaza este widget por el de tu proveedor (Dialogflow, Botpress, OpenAI, etc.)
+        const chatWindow = document.getElementById('chat-window');
+        const chatBody = document.getElementById('chat-body');
+        const chatInput = document.getElementById('chat-message-input');
+
+        window.toggleChat = function() {
+            chatWindow.classList.toggle('open');
+        }
+
+        window.handleSendMessage = function() {
+            const message = chatInput.value.trim();
+            if (message === '') return;
+
+            addMessageToChat(message, 'user');
+            chatInput.value = '';
+
+            setTimeout(() => {
+                const botResponse = getBotResponse(message);
+                addMessageToChat(botResponse, 'bot');
+            }, 800);
+        }
+
+        function addMessageToChat(text, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.className = `chat-message ${sender}`;
+            messageElement.textContent = text;
+            chatBody.appendChild(messageElement);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        function getBotResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            if (lowerMessage.includes('precio') || lowerMessage.includes('coste')) {
+                return 'El servicio de mantenimiento tiene un coste fijo de 250€ por la mano de obra, más el coste de los recambios necesarios. Para neumáticos, el precio varía según la gama que elijas.';
+            } else if (lowerMessage.includes('horario')) {
+                return 'Nuestro horario de recogida y entrega para mantenimiento es de 6:00 a 20:00. Recuerda que debe haber un margen mínimo de 6 horas entre ambas.';
+            } else if (lowerMessage.includes('sustitución')) {
+                return '¡Correcto! Si no cumplimos con la hora de entrega acordada, te proporcionamos un coche de sustitución sin coste alguno para ti.';
+            } else if (lowerMessage.includes('hola') || lowerMessage.includes('gracias')) {
+                return '¡De nada! Estoy para ayudarte. ¿Tienes alguna otra pregunta?';
+            } else {
+                return 'No he entendido tu pregunta. Soy un asistente de demostración. Puedes preguntar por "precio", "horario" o "coche de sustitución".';
+            }
+        }
+    });
+    </script>
+
+</body>
+</html>
