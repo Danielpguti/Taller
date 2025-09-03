@@ -1,4 +1,5 @@
 {
   "name": "AutoService At-Home Booking",
-  "description": "An elegant web application for booking at-home vehicle maintenance and tire change services. Users can select a service, fill in their details, and schedule an appointment."
+  "description": "An elegant web application for booking at-home vehicle maintenance and tire change services. Users can select a service, fill in their details, and schedule an appointment.",
+  "requestFramePermissions": []
 }
